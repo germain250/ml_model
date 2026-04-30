@@ -1,0 +1,206 @@
+{% extends 'analytics/base.html' %}
+{% block title %}Add a Student – EduPredict{% endblock %}
+{% block content %}
+<div class="px-10 py-12 max-w-3xl space-y-8">
+
+    <div>
+        <a href="{% url 'dos_students' %}"
+            class="text-xs font-medium text-slate-400 hover:text-neon transition-colors">← Back to Students</a>
+        <h1 class="mt-4 text-3xl font-bold text-slate-900">Add a New Student</h1>
+        <p class="mt-1 text-sm text-slate-500">Fill in the student's details. All academic fields are required for an
+            accurate prediction.</p>
+    </div>
+
+    {% if error %}
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl">
+        <p class="text-sm text-rose-600 font-medium">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        <!-- Basic info -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Basic Information</h2>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
+                <input type="text" name="name" required placeholder="e.g. Amara Osei"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon transition-colors">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Gender</label>
+                    <select name="Gender"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">School Type</label>
+                    <select name="School_Type"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic performance -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Academic Performance</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Hours studied per week</label>
+                    <input type="number" name="Hours_Studied" value="20" min="0" max="50" required
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Attendance (%)</label>
+                    <input type="number" name="Attendance" value="90" min="0" max="100" required
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Previous Scores (%)</label>
+                    <input type="number" name="Previous_Scores" value="70" min="0" max="100" required
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Tutoring sessions (per month)</label>
+                    <input type="number" name="Tutoring_Sessions" value="0" min="0" max="20"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Lifestyle & Wellbeing</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Sleep hours per night</label>
+                    <input type="number" name="Sleep_Hours" value="7" min="0" max="12"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Physical activity (hrs/week)</label>
+                    <input type="number" name="Physical_Activity" value="3" min="0" max="20"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Motivation level</label>
+                    <select name="Motivation_Level"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Does the student join
+                        extracurriculars?</label>
+                    <select name="Extracurricular_Activities"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home & Environment -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Home & Environment</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Parental involvement</label>
+                    <select name="Parental_Involvement"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Access to learning resources</label>
+                    <select name="Access_to_Resources"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Internet access at home</label>
+                    <select name="Internet_Access"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Yes" selected>Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Family income level</label>
+                    <select name="Family_Income"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Peer influence</label>
+                    <select name="Peer_Influence"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Negative">Negative</option>
+                        <option value="Neutral" selected>Neutral</option>
+                        <option value="Positive">Positive</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Distance from school</label>
+                    <select name="Distance_from_Home"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Near" selected>Near</option>
+                        <option value="Moderate">Moderate</option>
+                        <option value="Far">Far</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Parental education level</label>
+                    <select name="Parental_Education_Level"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="High School">High School</option>
+                        <option value="College" selected>College</option>
+                        <option value="Postgraduate">Postgraduate</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Teacher quality at school</label>
+                    <select name="Teacher_Quality"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5">Learning disability?</label>
+                    <select name="Learning_Disabilities"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon bg-white">
+                        <option value="No" selected>No</option>
+                        <option value="Yes">Yes</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit"
+            class="w-full py-4 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-neon transition-all">
+            Save Student Record
+        </button>
+    </form>
+
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+============================================================
+  TRAINING RUN  —  2026-04-03 12:21:51
+============================================================
+Dataset  : /home/syncher/ml_model/StudentPerformanceFactors.csv
+Rows     : 6,607  |  Columns : 20
+Score range : 55 – 101
+High Performance rate : 24.6%  (threshold >= 70)
+
+───────────────────────────────────────────────────────
+  REGRESSION  —  Exam Score Prediction
+───────────────────────────────────────────────────────
+  MAE           : 0.6962
+  R²            : 0.7362
+
+───────────────────────────────────────────────────────
+  CLASSIFICATION  —  High Performance Prediction
+───────────────────────────────────────────────────────
+  F1 Score      : 0.9041
+  Accuracy      : 95.23%
+
+  ✅  Pipelines exported to /home/syncher/ml_model
+───────────────────────────────────────────────────────
+
+============================================================
+  TRAINING RUN  —  2026-04-10 21:07:58
+============================================================
+Dataset  : /home/syncher/ml_model/StudentPerformanceFactors.csv
+Rows     : 6,607  |  Columns : 20
+Score range : 55 – 101
+High Performance rate : 100.0%  (threshold >= 55)
+
+───────────────────────────────────────────────────────
+  REGRESSION  —  Exam Score Prediction
+───────────────────────────────────────────────────────
+  MAE           : 0.6962
+  R²            : 0.7362
+
+───────────────────────────────────────────────────────
+  CLASSIFICATION  —  High Performance Prediction
+───────────────────────────────────────────────────────
+
+============================================================
+  TRAINING RUN  —  2026-04-10 21:10:12
+============================================================
+Dataset  : /home/syncher/ml_model/StudentPerformanceFactors.csv
+Rows     : 6,607  |  Columns : 20
+Score range : 55 – 101
+High Performance rate : 100.0%  (threshold >= 55)
+
+───────────────────────────────────────────────────────
+  REGRESSION  —  Exam Score Prediction
+───────────────────────────────────────────────────────
+  MAE           : 0.6962
+  R²            : 0.7362
+
+───────────────────────────────────────────────────────
+  CLASSIFICATION  —  High Performance Prediction
+───────────────────────────────────────────────────────
+
+============================================================
+  TRAINING RUN  —  2026-04-10 21:14:43
+============================================================
+Dataset  : /home/syncher/ml_model/StudentPerformanceFactors.csv
+Rows     : 6,607  |  Columns : 20
+Score range : 55 – 101
+High Performance rate : 100.0%  (threshold >= 55)
+
+───────────────────────────────────────────────────────
+  REGRESSION  —  Exam Score Prediction
+───────────────────────────────────────────────────────
+  MAE           : 0.6962
+  R²            : 0.7362
+
+───────────────────────────────────────────────────────
+  CLASSIFICATION  —  High Performance Prediction
+───────────────────────────────────────────────────────
+  WARNING: Only one class present (1). Using DummyClassifier.
+  F1 Score      : 1.0000
+  Accuracy      : 100.00%
+
+  ✅  Pipelines exported to /home/syncher/ml_model
+───────────────────────────────────────────────────────

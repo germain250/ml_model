@@ -1,0 +1,63 @@
+{% extends 'analytics/base.html' %}
+{% block title %}Schools – EduPredict Admin{% endblock %}
+{% block content %}
+<div class="px-10 py-12 space-y-8">
+
+    <div class="flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">Schools</h1>
+            <p class="mt-1 text-sm text-slate-500">All institutions currently registered on the platform.</p>
+        </div>
+        <a href="{% url 'super_admin_add_school' %}"
+            class="px-6 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-neon transition-all">
+            + Register a School
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">School Name
+                    </th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Address</th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date Registered
+                    </th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                {% for school in schools %}
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center text-white text-xs font-bold">
+                                {{ school.name|first }}
+                            </div>
+                            <span class="text-sm font-semibold text-slate-800">{{ school.name }}</span>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5 text-sm text-slate-500">{{ school.address }}</td>
+                    <td class="px-8 py-5 text-sm text-slate-400">{{ school.created_at|date:"d M Y" }}</td>
+                    <td class="px-8 py-5 text-right">
+                        <span
+                            class="px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-lg text-xs font-medium text-slate-400">Active</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="px-8 py-16 text-center text-sm text-slate-400">
+                        No schools registered yet.
+                        <a href="{% url 'super_admin_add_school' %}"
+                            class="ml-2 text-neon hover:underline font-medium">Register the first one →</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

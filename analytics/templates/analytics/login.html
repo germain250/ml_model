@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In – EduPredict</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { neon: '#065f46' } } }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+
+    <div class="w-full max-w-md fade-in">
+
+        <!-- Logo -->
+        <div class="text-center mb-10">
+            <div class="inline-flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-slate-900">EduPredict</span>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900">Welcome back</h1>
+            <p class="mt-1 text-sm text-slate-500">Sign in to access your dashboard.</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+
+            {% if form.errors %}
+            <div class="mb-6 p-4 bg-rose-50 border border-rose-100 rounded-xl">
+                <p class="text-sm text-rose-600 font-medium">The username or password you entered is incorrect. Please
+                    try again.</p>
+            </div>
+            {% endif %}
+
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="id_username">Username</label>
+                    <input type="text" name="username" id="id_username" required autofocus
+                        placeholder="Enter your username"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-neon transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1.5" for="id_password">Password</label>
+                    <input type="password" name="password" id="id_password" required placeholder="Enter your password"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-900 placeholder-slate-300 focus:outline-none focus:border-neon transition-colors">
+                </div>
+
+                <button type="submit"
+                    class="w-full py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-neon transition-all mt-2">
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <p class="text-center mt-6 text-xs text-slate-400">EduPredict Student Analytics Platform &copy; 2026</p>
+    </div>
+
+</body>
+
+</html>

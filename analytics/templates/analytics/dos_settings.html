@@ -1,0 +1,86 @@
+{% extends 'analytics/base.html' %}
+{% block title %}Settings – EduPredict{% endblock %}
+{% block content %}
+<div class="px-10 py-12 max-w-2xl space-y-8">
+
+    <div>
+        <h1 class="text-3xl font-bold text-slate-900">Settings</h1>
+        <p class="mt-1 text-sm text-slate-500">Manage your account and school configuration.</p>
+    </div>
+
+    {% if success %}
+    <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+        <p class="text-sm text-emerald-700 font-medium">{{ success }}</p>
+    </div>
+    {% endif %}
+    {% if error %}
+    <div class="p-4 bg-rose-50 border border-rose-100 rounded-xl">
+        <p class="text-sm text-rose-600 font-medium">{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Pass Mark -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+        <h2 class="text-sm font-semibold text-slate-800">Pass Mark</h2>
+        <p class="text-xs text-slate-400">Students scoring above this value in previous scores are marked as passing.
+        </p>
+        <form method="post" class="flex items-end space-x-4">
+            {% csrf_token %}
+            <input type="hidden" name="set_threshold" value="1">
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5">Pass mark (%)</label>
+                <input type="number" name="pass_mark" value="{{ threshold.pass_mark }}" step="0.5" min="0" max="100"
+                    class="w-28 px-4 py-3 border border-slate-200 rounded-xl text-sm font-semibold focus:outline-none focus:border-neon transition-colors">
+            </div>
+            <button type="submit"
+                class="px-6 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-neon transition-all">
+                Save
+            </button>
+        </form>
+    </div>
+
+    <!-- Change Password -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-4">
+        <h2 class="text-sm font-semibold text-slate-800">Change Password</h2>
+        <p class="text-xs text-slate-400">Update your login password. You will remain logged in after changing it.</p>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="change_password" value="1">
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5">New password</label>
+                <input type="password" name="new_password" required
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon transition-colors"
+                    placeholder="Choose a new password">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5">Confirm new password</label>
+                <input type="password" name="confirm_password" required
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon transition-colors"
+                    placeholder="Repeat the password">
+            </div>
+            <button type="submit"
+                class="px-6 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-neon transition-all">
+                Change Password
+            </button>
+        </form>
+    </div>
+
+    <!-- Account info -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-800">Account Information</h2>
+        <div class="flex justify-between py-3 border-b border-slate-50">
+            <span class="text-xs text-slate-400">Username</span>
+            <span class="text-sm font-medium text-slate-800">{{ user.username }}</span>
+        </div>
+        <div class="flex justify-between py-3 border-b border-slate-50">
+            <span class="text-xs text-slate-400">Role</span>
+            <span class="text-sm font-medium text-slate-800">{{ user.profile.get_role_display }}</span>
+        </div>
+        <div class="flex justify-between py-3">
+            <span class="text-xs text-slate-400">School</span>
+            <span class="text-sm font-medium text-slate-800">{{ school.name }}</span>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

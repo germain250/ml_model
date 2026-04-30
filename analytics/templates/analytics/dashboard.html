@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Intelligence</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0e14;
+            --card: #161b22;
+            --border: #30363d;
+            --accent: #00ff88;
+            --dim: #00cc6a;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --danger: #ff4444;
+            --warn: #f0a500;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 1280px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ── Form panel ──────────────────────────────────────────────────── */
+        .form-panel {
+            overflow-y: auto;
+            max-height: 88vh;
+        }
+
+        .form-panel h2 {
+            color: var(--accent);
+            font-size: 1rem;
+            margin-bottom: 18px;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            margin: 18px 0 10px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .field label {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .slider-val {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            font-size: 0.85rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            appearance: none;
+            background: #30363d;
+            height: 6px;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        select {
+            width: 100%;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ── Results panel ───────────────────────────────────────────────── */
+        .results-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .metric-card {
+            text-align: center;
+            padding: 28px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--accent);
+            margin: 12px 0 6px;
+            transition: all 0.3s;
+        }
+
+        .metric-sub {
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        /* grade bar */
+        .grade-bar-wrap {
+            margin-top: 10px;
+            background: #1c2128;
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .grade-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger), var(--warn), var(--accent));
+            border-radius: 6px;
+            transition: width 0.4s;
+        }
+
+        /* pass badge */
+        .pass-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .badge-pass {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .badge-fail {
+            background: rgba(255, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* Recommendations */
+        .rec-list {
+            list-style: none;
+        }
+
+        .rec-item {
+            background: #1c2128;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            transition: transform 0.2s;
+        }
+
+        .rec-item:hover {
+            transform: translateX(4px);
+        }
+
+        .rec-item strong {
+            display: block;
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .rec-item span {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .rec-empty {
+            color: var(--muted);
+            font-size: 0.85rem;
+            padding: 12px;
+        }
+
+        /* spinner */
+        .spin {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>Student Grade Intelligence</h1>
+            <p>Enter student profile on the left → get live grade prediction and insights on the right</p>
+        </header>
+
+        <!-- ── INPUT PANEL ─────────────────────────────────────────────────────── -->
+        <section class="card form-panel">
+            <h2>⚙ Student Profile</h2>
+            <form id="sf">{% csrf_token %}
+
+                <div class="section-label">Academic Foundations</div>
+                <div class="two-col">
+                    <div class="field">
+                        <div class="label-row"><label>Hours Studied / Week</label><span class="slider-val"
+                                id="v-hours">20</span></div>
+                        <input type="range" name="Hours_Studied" min="0" max="50" value="20" class="inp"
+                            data-t="v-hours">
+                    </div>
+                    <div class="field">
+                        <div class="label-row"><label>Attendance (%)</label><span class="slider-val"
+                                id="v-attn">90</span></div>
+                        <input type="range" name="Attendance" min="0" max="100" value="90" class="inp" data-t="v-attn">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="field">
+                        <div class="label-row"><label>Previous Scores</label><span class="slider-val"
+                                id="v-prev">70</span></div>
+                        <input type="range" name="Previous_Scores" min="0" max="100" value="70" class="inp"
+                            data-t="v-prev">
+                    </div>
+                    <div class="field">
+                        <div class="label-row"><label>Tutoring Sessions</label><span class="slider-val"
+                                id="v-tutor">0</span></div>
+                        <input type="range" name="Tutoring_Sessions" min="0" max="10" value="0" class="inp"
+                            data-t="v-tutor">
+                    </div>
+                </div>
+
+                <div class="section-label">Lifestyle & Wellness</div>
+                <div class="two-col">
+                    <div class="field">
+                        <div class="label-row"><label>Sleep Hours</label><span class="slider-val" id="v-sleep">7</span>
+                        </div>
+                        <input type="range" name="Sleep_Hours" min="0" max="12" value="7" class="inp" data-t="v-sleep">
+                    </div>
+                    <div class="field">
+                        <div class="label-row"><label>Physical Activity (hrs)</label><span class="slider-val"
+                                id="v-phys">3</span></div>
+                        <input type="range" name="Physical_Activity" min="0" max="10" value="3" class="inp"
+                            data-t="v-phys">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Motivation Level</label>
+                        <select name="Motivation_Level" class="inp">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Internet Access</label>
+                        <select name="Internet_Access" class="inp">
+                            <option value="Yes" selected>Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-label">Environmental Factors</div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Family Income</label>
+                        <select name="Family_Income" class="inp">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Teacher Quality</label>
+                        <select name="Teacher_Quality" class="inp">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Peer Influence</label>
+                        <select name="Peer_Influence" class="inp">
+                            <option value="Negative">Negative</option>
+                            <option value="Neutral" selected>Neutral</option>
+                            <option value="Positive">Positive</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Distance from Home</label>
+                        <select name="Distance_from_Home" class="inp">
+                            <option value="Near" selected>Near</option>
+                            <option value="Moderate">Moderate</option>
+                            <option value="Far">Far</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-label">Background</div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Parental Involvement</label>
+                        <select name="Parental_Involvement" class="inp">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Parental Education</label>
+                        <select name="Parental_Education_Level" class="inp">
+                            <option value="High School">High School</option>
+                            <option value="College" selected>College</option>
+                            <option value="Postgraduate">Postgraduate</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>School Type</label>
+                        <select name="School_Type" class="inp">
+                            <option value="Public" selected>Public</option>
+                            <option value="Private">Private</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Gender</label>
+                        <select name="Gender" class="inp">
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="field">
+                        <label>Learning Disabilities</label>
+                        <select name="Learning_Disabilities" class="inp">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Extracurricular Activities</label>
+                        <select name="Extracurricular_Activities" class="inp">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- ── RESULTS PANEL ───────────────────────────────────────────────────── -->
+        <section class="results-panel">
+            <div class="metrics-grid">
+                <div class="card metric-card">
+                    <div class="metric-label">Predicted Exam Score</div>
+                    <div class="metric-value" id="res-score">—</div>
+                    <div class="metric-sub">out of 100</div>
+                    <div class="grade-bar-wrap">
+                        <div class="grade-bar" id="grade-bar" style="width:0%"></div>
+                    </div>
+                    <div class="spin" id="spin-score"></div>
+                </div>
+                <div class="card metric-card">
+                    <div class="metric-label">Excellence Probability</div>
+                    <div class="metric-value" id="res-prob">—</div>
+                    <div class="metric-sub">likelihood of Score ≥ 70</div>
+                    <div id="pass-badge"></div>
+                    <div class="spin" id="spin-prob"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2
+                    style="color:var(--accent);font-size:1rem;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                    </svg>
+                    AI Intelligent Insights
+                </h2>
+                <ul class="rec-list" id="rec-list">
+                    <li class="rec-empty">Adjust the student profile to receive AI-powered recommendations.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const form = document.getElementById('sf');
+        const inputs = form.querySelectorAll('.inp');
+        let debounceTimer;
+
+        // Sync slider → label
+        inputs.forEach(inp => {
+            if (inp.dataset.t) {
+                inp.addEventListener('input', () => {
+                    document.getElementById(inp.dataset.t).textContent = inp.value;
+                });
+            }
+        });
+
+        const setLoading = (on) => {
+            document.querySelectorAll('.spin').forEach(s => s.style.display = on ? 'block' : 'none');
+        };
+
+        const update = async () => {
+            setLoading(true);
+            const fd = new FormData(form);
+            try {
+                const res = await fetch('/api/predict/', {
+                    method: 'POST',
+                    body: fd,
+                    headers: { 'X-CSRFToken': fd.get('csrfmiddlewaretoken') }
+                });
+                const data = await res.json();
+                setLoading(false);
+
+                if (data.error) { console.error(data.error); return; }
+
+                // Score
+                const score = data.score;
+                document.getElementById('res-score').textContent = score.toFixed(1);
+                document.getElementById('grade-bar').style.width = score + '%';
+
+                // Pass prob
+                const prob = data.pass_prob;
+                document.getElementById('res-prob').textContent = prob.toFixed(1) + '%';
+                const badge = document.getElementById('pass-badge');
+                badge.innerHTML = prob >= 50
+                    ? '<span class="pass-badge badge-pass">HIGH PERFORMANCE</span>'
+                    : '<span class="pass-badge badge-fail">STRENGTHEN PROFILE</span>';
+
+                // Recommendations
+                const list = document.getElementById('rec-list');
+                if (!data.recommendations || !data.recommendations.length) {
+                    list.innerHTML = '<li class="rec-empty">✅ Profile looks optimal — keep up the current routine.</li>';
+                } else {
+                    list.innerHTML = data.recommendations.map(r =>
+                        `<li class="rec-item"><strong>📌 ${r.label}</strong><span>${r.desc}</span></li>`
+                    ).join('');
+                }
+            } catch (e) {
+                setLoading(false);
+                console.error(e);
+            }
+        };
+
+        inputs.forEach(inp => inp.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(update, 350);
+        }));
+
+        window.addEventListener('load', update);
+    </script>
+</body>
+
+</html>

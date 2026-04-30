@@ -1,0 +1,196 @@
+{% extends 'analytics/base.html' %}
+{% block title %}My Students – EduPredict{% endblock %}
+{% block content %}
+<div class="px-10 py-12 space-y-8">
+
+    <div class="flex justify-between items-end">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">My Students</h1>
+            <p class="mt-1 text-sm text-slate-500">{{ school.name }} — {{ students.count }} student{{
+                students.count|pluralize }} registered.</p>
+        </div>
+        <a href="{% url 'dos_add_student' %}"
+            class="px-6 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-neon transition-all">
+            + Add a Student
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Name</th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Previous Score
+                    </th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Attendance</th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Added</th>
+                    <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50" id="student-table-body">
+                {% for s in students %}
+                <tr class="hover:bg-slate-50 transition-colors" id="row-{{ s.id }}" data-id="{{ s.id }}"
+                    data-name="{{ s.name }}" data-hours="{{ s.hours_studied }}" data-attendance="{{ s.attendance }}"
+                    data-sleep="{{ s.sleep_hours }}" data-scores="{{ s.previous_scores }}">
+                    <td class="px-8 py-5">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                                {{ s.name|first|upper }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800" id="name-{{ s.id }}">{{ s.name }}</p>
+                                <p class="text-xs text-slate-400">ID #{{ s.id }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-sm font-semibold text-slate-800">{{ s.previous_scores }}%</span>
+                            <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-neon rounded-full" style="width:{{ s.previous_scores }}%"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-8 py-5 text-sm text-slate-600">{{ s.attendance }}%</td>
+                    <td class="px-8 py-5 text-sm text-slate-400">{{ s.created_at|date:"d M Y" }}</td>
+                    <td class="px-8 py-5 text-right">
+                        <div class="flex items-center justify-end space-x-2">
+                            <a href="{% url 'student_deliberate' s.id %}"
+                                class="px-4 py-2 bg-neon text-white text-[10px] font-bold uppercase tracking-widest rounded-lg hover:bg-neon-glow transition-all">
+                                View Report
+                            </a>
+                            <button data-edit="{{ s.id }}" onclick="openEditFromRow(this)"
+                                class="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-neon hover:border-neon transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                    </path>
+                                </svg>
+                            </button>
+                            <button onclick="deleteStudent('{{ s.id }}')"
+                                class="p-2 bg-white border border-slate-200 rounded-lg text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-8 py-16 text-center">
+                        <p class="text-sm text-slate-400">No students yet.</p>
+                        <a href="{% url 'dos_add_student' %}"
+                            class="mt-2 inline-block text-sm text-neon font-medium hover:underline">Add your first
+                            student →</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+            <h3 class="text-base font-semibold text-slate-900">Edit Student</h3>
+            <button onclick="document.getElementById('editModal').classList.add('hidden')"
+                class="text-slate-400 hover:text-slate-600">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+        <form id="editForm" class="p-8 space-y-4">
+            <input type="hidden" id="editStudentId">
+            <div>
+                <label class="block text-xs font-medium text-slate-500 mb-1">Full Name</label>
+                <input type="text" id="editName"
+                    class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Hours Studied / week</label>
+                    <input type="number" id="editHours"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Attendance %</label>
+                    <input type="number" id="editAttendance"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Previous Scores %</label>
+                    <input type="number" id="editScores"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Sleep Hours</label>
+                    <input type="number" id="editSleep"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-neon">
+                </div>
+            </div>
+            <div id="editError" class="hidden p-3 bg-rose-50 rounded-xl text-sm text-rose-600"></div>
+            <button type="button" onclick="submitEdit()"
+                class="w-full py-3 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-neon transition-all">
+                Save Changes
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const csrfToken = '{{ csrf_token }}';
+
+    function openEditFromRow(btn) {
+        const row = document.getElementById('row-' + btn.dataset.edit);
+        document.getElementById('editStudentId').value = row.dataset.id;
+        document.getElementById('editName').value = row.dataset.name;
+        document.getElementById('editHours').value = row.dataset.hours;
+        document.getElementById('editAttendance').value = row.dataset.attendance;
+        document.getElementById('editSleep').value = row.dataset.sleep;
+        document.getElementById('editScores').value = row.dataset.scores;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    async function submitEdit() {
+        const id = document.getElementById('editStudentId').value;
+        const errEl = document.getElementById('editError');
+        errEl.classList.add('hidden');
+
+        const body = new FormData();
+        body.append('csrfmiddlewaretoken', csrfToken);
+        body.append('name', document.getElementById('editName').value);
+        body.append('Hours_Studied', document.getElementById('editHours').value);
+        body.append('Attendance', document.getElementById('editAttendance').value);
+        body.append('Sleep_Hours', document.getElementById('editSleep').value);
+        body.append('Previous_Scores', document.getElementById('editScores').value);
+
+        try {
+            const res = await fetch(`/api/student/${id}/edit/`, { method: 'POST', body });
+            const data = await res.json();
+            if (data.error) { errEl.textContent = data.error; errEl.classList.remove('hidden'); return; }
+            document.getElementById('editModal').classList.add('hidden');
+            window.location.reload();
+        } catch (e) { errEl.textContent = 'Something went wrong.'; errEl.classList.remove('hidden'); }
+    }
+
+    async function deleteStudent(id) {
+        if (!confirm('Are you sure you want to remove this student? This cannot be undone.')) return;
+        const body = new FormData();
+        body.append('csrfmiddlewaretoken', csrfToken);
+        try {
+            const res = await fetch(`/api/student/${id}/delete/`, { method: 'POST', body });
+            const data = await res.json();
+            if (data.success) { document.getElementById(`row-${id}`)?.remove(); }
+        } catch (e) { alert('Could not delete this student.'); }
+    }
+</script>
+{% endblock %}

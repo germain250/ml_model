@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EduPredict{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: '#065f46',
+                        'neon-glow': '#047857',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .neon-text {
+            background: linear-gradient(135deg, #047857, #065f46);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .neon-btn {
+            background: #065f46;
+            box-shadow: 0 0 15px rgba(6, 95, 70, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .neon-btn:hover {
+            box-shadow: 0 0 25px rgba(6, 95, 70, 0.4);
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.625rem 0.75rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #94a3b8;
+            transition: all 0.15s;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .sidebar-link.active {
+            background: #065f46;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body class="text-slate-900 min-h-screen">
+    <aside class="fixed top-0 left-0 h-screen w-60 bg-slate-900 text-white z-50 flex flex-col">
+        <!-- Brand -->
+        <div class="px-5 py-6 border-b border-white/5">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-neon rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="block text-sm font-bold text-white">EduPredict</span>
+                    <span class="block text-[10px] text-slate-500">Student Analytics</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-grow px-3 py-5 space-y-0.5 overflow-y-auto">
+            {% if user.is_authenticated %}
+            {% if user.profile.role == 'SUPER_ADMIN' %}
+            <p class="px-3 pt-3 pb-2 text-[10px] font-semibold text-slate-600 uppercase tracking-widest">Admin</p>
+            <a href="{% url 'super_admin_overview' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                    </path>
+                </svg>
+                Overview
+            </a>
+            <a href="{% url 'super_admin_schools' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                    </path>
+                </svg>
+                Schools
+            </a>
+            <a href="{% url 'super_admin_add_school' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Register a School
+            </a>
+
+            {% elif user.profile.role == 'DOS' %}
+            <p class="px-3 pt-3 pb-2 text-[10px] font-semibold text-slate-600 uppercase tracking-widest">Menu</p>
+            <a href="{% url 'dos_overview' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                    </path>
+                </svg>
+                Overview
+            </a>
+            <a href="{% url 'dos_students' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+                    </path>
+                </svg>
+                My Students
+            </a>
+            <a href="{% url 'dos_add_student' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+                Add a Student
+            </a>
+            <a href="{% url 'dos_settings' %}" class="sidebar-link">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                Settings
+            </a>
+            {% endif %}
+            {% endif %}
+        </nav>
+
+        <!-- User footer -->
+        {% if user.is_authenticated %}
+        <div class="px-3 py-5 border-t border-white/5">
+            <div class="flex items-center space-x-3 px-2 mb-3">
+                <div
+                    class="w-8 h-8 bg-neon rounded-lg flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    {{ user.username|first|upper }}
+                </div>
+                <div class="min-w-0">
+                    <span class="block text-sm font-semibold text-white truncate">{{ user.username }}</span>
+                    <span class="block text-[10px] text-slate-400">{{ user.profile.get_role_display }}</span>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}" class="sidebar-link hover:bg-rose-500/20 hover:text-rose-400">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                    </path>
+                </svg>
+                Log Out
+            </a>
+        </div>
+        {% endif %}
+    </aside>
+
+    <!-- Main content -->
+    <main class="ml-60 min-h-screen">
+        <div class="animate-fade-in">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+
+</html>

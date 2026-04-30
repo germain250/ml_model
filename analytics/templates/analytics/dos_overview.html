@@ -1,0 +1,74 @@
+{% extends 'analytics/base.html' %}
+{% block title %}Overview – EduPredict{% endblock %}
+{% block content %}
+<div class="px-10 py-12 max-w-4xl space-y-10">
+
+    <div>
+        <h1 class="text-3xl font-bold text-slate-900">Welcome back, {{ user.username }}</h1>
+        <p class="mt-1 text-sm text-slate-500">{{ school.name }} — here is how your students are doing today.</p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Total Students</p>
+            <p class="text-5xl font-bold text-slate-900">{{ student_count }}</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Passing</p>
+            <p class="text-5xl font-bold text-neon">{{ passing }}</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-100 p-8 shadow-sm">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Pass Rate</p>
+            <p class="text-5xl font-bold text-slate-900">{{ pass_rate }}%</p>
+        </div>
+    </div>
+
+    <!-- Threshold -->
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8">
+        <h2 class="text-sm font-semibold text-slate-800 mb-1">Pass Mark Threshold</h2>
+        <p class="text-xs text-slate-400 mb-6">Students with a previous score above this value are considered passing.
+        </p>
+        <form method="post" class="flex items-end space-x-4">
+            {% csrf_token %}
+            <input type="hidden" name="set_threshold" value="1">
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5">Current pass mark</label>
+                <input type="number" name="pass_mark" value="{{ threshold.pass_mark }}" step="0.5" min="0" max="100"
+                    class="w-28 px-4 py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-800 focus:outline-none focus:border-neon transition-colors">
+            </div>
+            <button type="submit"
+                class="px-6 py-3 bg-slate-900 text-white text-xs font-semibold rounded-xl hover:bg-neon transition-all">
+                Update
+            </button>
+        </form>
+    </div>
+
+    <!-- Quick links -->
+    <div class="flex space-x-4">
+        <a href="{% url 'dos_students' %}"
+            class="flex-1 flex items-center justify-between bg-white border border-slate-100 rounded-2xl p-6 shadow-sm hover:border-neon transition-colors group">
+            <div>
+                <p class="text-sm font-semibold text-slate-900">View all students</p>
+                <p class="text-xs text-slate-400 mt-0.5">Manage records, edit, delete</p>
+            </div>
+            <svg class="w-5 h-5 text-slate-300 group-hover:text-neon transition-colors" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </a>
+        <a href="{% url 'dos_add_student' %}"
+            class="flex-1 flex items-center justify-between bg-slate-900 text-white rounded-2xl p-6 shadow-sm hover:bg-neon transition-colors group">
+            <div>
+                <p class="text-sm font-semibold">Add a student</p>
+                <p class="text-xs text-slate-400 mt-0.5">Create a new record</p>
+            </div>
+            <svg class="w-5 h-5 text-slate-500 group-hover:text-white transition-colors" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

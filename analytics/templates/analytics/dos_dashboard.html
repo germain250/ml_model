@@ -1,0 +1,655 @@
+{% extends 'analytics/base.html' %}
+
+{% block title %}DOS Dashboard - EduPredict Pro{% endblock %}
+
+{% block content %}
+<div class="px-6 py-10 max-w-7xl mx-auto space-y-12">
+    <header class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 pb-8 border-b border-slate-50">
+        <div class="space-y-1">
+            <div class="flex items-center space-x-2 text-neon mb-1">
+                <div class="w-1 h-3 bg-neon shadow-[0_0_8px_rgba(6,95,70,0.5)]"></div>
+                <span class="text-[10px] font-black uppercase tracking-[0.3em]">{{ school.name }}</span>
+            </div>
+            <h1 class="text-3xl font-black text-slate-900 leading-tight uppercase tracking-tighter">Academic Oversight
+            </h1>
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Predictive Intelligence & Decision
+                Support</p>
+        </div>
+
+        <div class="flex items-center space-x-6">
+            <!-- Threshold Deck -->
+            <div
+                class="glass-card px-6 py-4 rounded-[1.5rem] border-slate-100 flex items-center space-x-4 shadow-sm group">
+                <div
+                    class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-neon transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
+                    </svg>
+                </div>
+                <form method="post" class="flex items-center space-x-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="set_threshold" value="1">
+                    <div class="space-y-0.5">
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Pass
+                            Threshold</label>
+                        <div class="flex items-center space-x-1">
+                            <input type="number" name="pass_mark" value="{{ threshold.pass_mark }}" step="0.1"
+                                class="bg-transparent font-black text-slate-800 w-10 text-xs focus:outline-none focus:text-neon transition-colors">
+                            <span class="text-slate-300 font-bold text-[10px]">%</span>
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-400 hover:bg-neon hover:text-white transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 xl:grid-cols-4 gap-12">
+        <!-- Efficiency Data Deck -->
+        <div class="xl:col-span-1 space-y-6">
+            <div class="glass-card rounded-[2rem] border-slate-100 overflow-hidden sticky top-24">
+                <div class="bg-slate-900 px-8 py-6 relative">
+                    <div class="absolute top-0 right-0 w-20 h-full bg-neon/10 skew-x-[-20deg]"></div>
+                    <h3 class="text-sm font-black text-white uppercase tracking-[0.2em] relative">Data Deck: Analysis
+                    </h3>
+                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-1 relative">Provision
+                        Student Node</p>
+                </div>
+
+                <form id="studentAddForm" class="p-8 space-y-6">
+                    {% csrf_token %}
+                    <div class="space-y-1.5">
+                        <label class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Subject
+                            Identity</label>
+                        <input type="text" name="name" required placeholder="Student Name"
+                            class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-medium focus:border-neon focus:ring-0 outline-none transition-all placeholder:text-slate-300">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Study
+                                index</label>
+                            <input type="number" name="Hours_Studied" value="20"
+                                class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-black focus:border-neon focus:ring-0 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Presence
+                                %</label>
+                            <input type="number" name="Attendance" value="90"
+                                class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-black focus:border-neon focus:ring-0 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Sleep
+                                Hrs</label>
+                            <input type="number" name="Sleep_Hours" value="7"
+                                class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-black focus:border-neon focus:ring-0 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label
+                                class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Base
+                                Score</label>
+                            <input type="number" name="Previous_Scores" value="70"
+                                class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl text-xs font-black focus:border-neon focus:ring-0 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <!-- Expand Categorical Features -->
+                    <div class="pt-6 border-t border-slate-50 space-y-4">
+                        <details class="group">
+                            <summary
+                                class="flex justify-between items-center cursor-pointer text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] focus:outline-none">
+                                <span class="group-open:text-neon transition-colors">Neural Variates</span>
+                                <svg class="w-3 h-3 group-open:rotate-180 transition-transform group-open:text-neon"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </summary>
+                            <div class="mt-6 grid grid-cols-1 gap-4 h-64 overflow-y-auto pr-2 custom-scrollbar">
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Parental
+                                        Node</label>
+                                    <select name="Parental_Involvement"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Mentor
+                                        Qual.</label>
+                                    <select name="Teacher_Quality"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Drive
+                                        Level</label>
+                                    <select name="Motivation_Level"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Tutoring
+                                        Nodes</label>
+                                    <input type="number" name="Tutoring_Sessions" value="0"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-black outline-none focus:border-neon">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Peer
+                                        Node Delta</label>
+                                    <select name="Peer_Influence"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Negative">Negative</option>
+                                        <option value="Neutral" selected>Neutral</option>
+                                        <option value="Positive">Positive</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Network
+                                        Access</label>
+                                    <select name="Internet_Access"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Yes" selected>Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Income
+                                        Status</label>
+                                    <select name="Family_Income"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium" selected>Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label
+                                        class="block text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1">Commute
+                                        Radius</label>
+                                    <select name="Distance_from_Home"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl text-[10px] font-bold uppercase tracking-wider outline-none focus:border-neon">
+                                        <option value="Near" selected>Near</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Far">Far</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <button type="submit" id="submitBtn"
+                        class="neon-btn w-full py-5 rounded-[1.5rem] text-[11px] font-black uppercase tracking-[0.2em] text-white flex items-center justify-center space-x-3">
+                        <span id="btnText">Trigger Intelligence</span>
+                        <div id="btnLoader"
+                            class="hidden w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin">
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Enrollment Infrastructure -->
+        <div class="xl:col-span-3">
+            <div class="glass-card rounded-[2.5rem] border-slate-100 overflow-hidden">
+                <div class="px-10 py-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
+                    <h3 class="text-xs font-black text-slate-800 uppercase tracking-[0.2em]">Institutional Enrollment
+                    </h3>
+                    <div
+                        class="bg-white px-4 py-2 rounded-full border border-slate-100 shadow-sm flex items-center space-x-3">
+                        <div class="w-1.5 h-1.5 bg-neon rounded-full animate-pulse"></div>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active
+                            Database</span>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left" id="studentTable">
+                        <thead>
+                            <tr class="bg-slate-50/50">
+                                <th
+                                    class="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                                    Subject Node</th>
+                                <th
+                                    class="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                                    Intelligence Index</th>
+                                <th
+                                    class="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                                    Presence Rank</th>
+                                <th
+                                    class="px-10 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right whitespace-nowrap">
+                                    Interface</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            {% for s in students %}
+                            <tr class="hover:bg-slate-50/80 transition-all cursor-pointer group neon-border-hover border-l-4 border-l-transparent hover:border-l-neon"
+                                id="student-row-{{ s.id }}" data-student-name="{{ s.name }}"
+                                data-hours="{{ s.hours_studied }}" data-attendance="{{ s.attendance }}"
+                                data-sleep="{{ s.sleep_hours }}" data-scores="{{ s.previous_scores }}"
+                                data-tutoring="{{ s.tutoring_sessions }}" data-activity="{{ s.physical_activity }}"
+                                data-parental="{{ s.parental_involvement }}"
+                                data-resources="{{ s.access_to_resources }}"
+                                data-extracurricular="{{ s.extracurricular_activities }}"
+                                data-motivation="{{ s.motivation_level }}" data-internet="{{ s.internet_access }}"
+                                data-income="{{ s.family_income }}" data-teacher="{{ s.teacher_quality }}"
+                                data-school-type="{{ s.school_type }}" data-peer="{{ s.peer_influence }}"
+                                data-disabilities="{{ s.learning_disabilities }}"
+                                data-education="{{ s.parental_education_level }}"
+                                data-distance="{{ s.distance_from_home }}" data-gender="{{ s.gender }}">
+                                <td class="px-10 py-7">
+                                    <div class="flex items-center space-x-4">
+                                        <div
+                                            class="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white text-xs font-black">
+                                            {{ s.name|slice:":1" }}
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-black text-slate-800 tracking-tight">{{ s.name }}
+                                            </div>
+                                            <div
+                                                class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter mt-1">
+                                                {{ s.created_at|date:"d M H:i" }} PROVISIONED</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-10 py-7">
+                                    <div class="flex items-center space-x-3">
+                                        <div
+                                            class="px-3 py-1 bg-slate-50 border border-slate-100 rounded-lg text-xs font-black text-slate-700">
+                                            {{ s.previous_scores }}%
+                                        </div>
+                                        <div class="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                            <div class="h-full bg-neon"
+                                                style="width: {{ s.previous_scores }}%; box-shadow: 0 0 5px rgba(6, 95, 70, 0.5);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-10 py-7 text-[11px] font-black text-slate-500 uppercase tracking-widest">
+                                    {{ s.attendance }}%
+                                </td>
+                                <td class="px-10 py-7 text-right flex items-center justify-end space-x-2">
+                                    <a href="{% url 'student_deliberate' s.id %}"
+                                        class="px-5 py-2.5 bg-white border border-slate-100 rounded-xl text-[10px] font-black uppercase tracking-widest text-indigo-400 hover:bg-slate-900 hover:text-white hover:border-slate-900 transition-all shadow-sm">
+                                        DELIBERATE
+                                    </a>
+                                    <button onclick="editStudent('{{ s.id }}')"
+                                        class="w-8 h-8 flex items-center justify-center bg-white border border-slate-100 rounded-lg text-slate-400 hover:bg-neon hover:text-white transition-all shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteStudent('{{ s.id }}')"
+                                        class="w-8 h-8 flex items-center justify-center bg-white border border-slate-100 rounded-lg text-slate-400 hover:bg-rose-500 hover:text-white transition-all shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-10 py-20 text-center">
+                                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">No
+                                        Subject Nodes Provisioned</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results Modal -->
+<div id="resultsModal"
+    class="fixed inset-0 bg-slate-950/40 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+    <div
+        class="bg-white w-full max-w-2xl rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.1)] overflow-hidden animate-fade-in border border-slate-100">
+        <div class="relative">
+            <!-- Header Accent -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-neon to-transparent">
+            </div>
+
+            <div class="p-12">
+                <div class="flex justify-between items-start mb-12">
+                    <div>
+                        <div class="flex items-center space-x-2 text-neon mb-2">
+                            <div class="w-2 h-2 bg-neon rounded-full animate-pulse shadow-[0_0_8px_rgba(6,95,70,0.8)]">
+                            </div>
+                            <span class="text-[10px] font-black uppercase tracking-[0.3em]">Neural Intelligence
+                                Report</span>
+                        </div>
+                        <h2 id="modalStudentName" class="text-4xl font-black text-slate-900 tracking-tighter uppercase">
+                            Subject Analysis</h2>
+                        <p class="text-[10px] font-bold text-slate-300 uppercase tracking-widest mt-2 font-mono">NODE
+                            ID: <span id="reportTime"></span></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <!-- Status Deck -->
+                    <div id="promotionCard"
+                        class="p-8 rounded-[2rem] border-2 transition-all relative overflow-hidden group">
+                        <div
+                            class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110">
+                        </div>
+                        <span
+                            class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 opacity-70">Promotion
+                            Recommendation</span>
+                        <div id="promotionVal" class="text-4xl font-black uppercase tracking-tighter transition-all">
+                        </div>
+                    </div>
+
+                    <div class="p-8 rounded-[2rem] bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                        <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Predicted
+                            Scalar Index</span>
+                        <div id="scoreVal" class="text-5xl font-black text-slate-900 tracking-tighter"></div>
+                    </div>
+                </div>
+
+                <!-- Guidance Array -->
+                <div class="space-y-8">
+                    <div class="p-8 bg-slate-900 rounded-[2rem] text-white relative overflow-hidden shadow-xl">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-neon"></div>
+                        <div class="flex items-center space-x-3 mb-4 opacity-50">
+                            <div class="w-1.5 h-1.5 bg-neon rounded-full"></div>
+                            <span class="text-[9px] font-black uppercase tracking-[0.2em]">Strategic Remedy
+                                Protocol</span>
+                        </div>
+                        <p id="geminiOneLiner" class="text-xl font-bold leading-tight italic text-slate-100"></p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <h4
+                                class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center space-x-2">
+                                <div class="w-3 h-[1px] bg-slate-200"></div>
+                                <span>Remedial Steps</span>
+                            </h4>
+                            <ul id="remediesList" class="space-y-3"></ul>
+                        </div>
+
+                        <div id="reassessmentBox"
+                            class="p-6 rounded-2xl bg-rose-50 border border-rose-100 hidden animate-pulse">
+                            <div class="flex items-center space-x-2 text-rose-500 mb-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                    </path>
+                                </svg>
+                                <h4 class="text-[10px] font-black uppercase tracking-widest">Reassessment Mandatory</h4>
+                            </div>
+                            <p class="text-[10px] text-rose-400 font-bold uppercase leading-relaxed tracking-wider">
+                                Subject index is unstable. Follow-up probe required within <span
+                                    class="text-rose-600">72 hours</span>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <button onclick="closeModal()"
+                        class="w-full py-5 bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-slate-800 transition-all shadow-lg hover:shadow-slate-200">
+                        Dismiss Intelligence Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Change Modal -->
+{% if profile.is_first_login %}
+<div id="passwordModal"
+    class="fixed inset-0 bg-slate-950/60 backdrop-blur-xl z-[150] flex items-center justify-center p-4">
+    <div
+        class="bg-white w-full max-w-sm rounded-[3rem] shadow-2xl overflow-hidden animate-fade-in border border-slate-100 p-12">
+        <div class="text-center mb-10">
+            <div
+                class="w-16 h-16 bg-slate-900 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 text-neon shadow-lg shadow-neon/10">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                    </path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tighter uppercase mb-2">Initialize Node</h2>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">Update temporary
+                credentials to finalize account provisioning.</p>
+        </div>
+        <form id="passwordChangeForm" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <input type="password" name="new_password" required minlength="8" placeholder="NEW KEYPAIR"
+                    class="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-neon transition-all">
+                <input type="password" name="confirm_password" required minlength="8" placeholder="CONFIRM KEYPAIR"
+                    class="w-full px-6 py-5 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none focus:border-neon transition-all">
+            </div>
+            <button type="submit" id="pwdBtn"
+                class="neon-btn w-full py-5 rounded-2xl text-[11px] font-black uppercase tracking-[0.2rem] text-white">
+                Access Infrastructure
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Profile Overlay -->
+<div id="profileOverlay" class="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-[105] hidden items-center justify-end">
+    <div
+        class="bg-white w-full max-w-sm h-full shadow-2xl p-12 flex flex-col animate-fade-in border-l border-slate-100">
+        <div class="flex justify-between items-center mb-12">
+            <div class="flex items-center space-x-2">
+                <div class="w-1.5 h-4 bg-neon"></div>
+                <h3 class="text-[10px] font-black text-slate-900 uppercase tracking-[0.3rem]">Node Profile</h3>
+            </div>
+            <button onclick="toggleProfile()" class="text-slate-300 hover:text-slate-900 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="space-y-10 flex-grow">
+            <div class="flex items-center space-x-6">
+                <div
+                    class="w-20 h-20 bg-slate-900 rounded-[2rem] flex items-center justify-center text-neon text-3xl font-black shadow-xl">
+                    {{ user.username|first|upper }}
+                </div>
+                <div>
+                    <h4 class="text-2xl font-black text-slate-900 tracking-tighter">{{ user.username }}</h4>
+                    <span class="text-[10px] font-black text-neon uppercase tracking-[0.2em]">{{
+                        profile.get_role_display }}</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-1">
+                    <span class="block text-[9px] font-black text-slate-300 uppercase tracking-widest">Affiliated
+                        Node</span>
+                    <span class="text-sm font-black text-slate-800 uppercase tracking-tight">{{ school.name }}</span>
+                </div>
+                <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 space-y-1">
+                    <span class="block text-[9px] font-black text-slate-300 uppercase tracking-widest">Deployment
+                        Timestamp</span>
+                    <span class="text-sm font-black text-slate-800 uppercase tracking-tight">{{ user.date_joined|date:"d
+                        M Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'logout' %}"
+            class="w-full py-5 border border-slate-100 text-[10px] font-black uppercase tracking-[0.3rem] rounded-2xl text-center hover:bg-slate-900 hover:text-white transition-all">Disconnect
+            Node</a>
+    </div>
+</div>
+
+<script>
+    function toggleProfile() {
+        const overlay = document.getElementById('profileOverlay');
+        overlay.classList.toggle('hidden');
+        overlay.classList.toggle('flex');
+    }
+
+    const pwdForm = document.getElementById('passwordChangeForm');
+    if (pwdForm) {
+        pwdForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('pwdBtn');
+            const data = new FormData(pwdForm);
+            if (data.get('new_password') !== data.get('confirm_password')) { alert("ACCESS DENIED: KEYPAIR MISMATCH"); return; }
+            btn.disabled = true; btn.textContent = "PROVISIONING...";
+            try {
+                const resp = await fetch('{% url "api_change_password" %}', {
+                    method: 'POST', body: data, headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                });
+                const res = await resp.json();
+                if (res.success) { window.location.reload(); }
+                else { throw new Error(res.error); }
+            } catch (err) { alert(err.message); } finally { btn.disabled = false; btn.textContent = "ACCESS INFRASTRUCTURE"; }
+        };
+    }
+
+    const form = document.getElementById('studentAddForm');
+    const modal = document.getElementById('resultsModal');
+
+    window.reAnalyze = async (id) => {
+        try {
+            const resp = await fetch(`/api/student/${id}/analyze/`);
+            const data = await resp.json();
+            showResults(data);
+        } catch (err) { alert("PROBE FAILED"); }
+    }
+
+    let editMode = false;
+    let currentEditId = null;
+
+    window.editStudent = (id) => {
+        const row = document.getElementById(`student-row-${id}`);
+        editMode = true;
+        currentEditId = id;
+
+        // Update UI
+        document.getElementById('btnText').textContent = 'Confirm Update';
+
+        // Fill form
+        const P = (key) => row.getAttribute(`data-${key}`);
+        form.name.value = P('student-name');
+        form.Hours_Studied.value = P('hours');
+        form.Attendance.value = P('attendance');
+        form.Sleep_Hours.value = P('sleep');
+        form.Previous_Scores.value = P('scores');
+        form.Tutoring_Sessions.value = P('tutoring');
+        form.Physical_Activity.value = P('activity');
+        form.Parental_Involvement.value = P('parental');
+        form.Teacher_Quality.value = P('teacher');
+        form.Motivation_Level.value = P('motivation');
+        form.Peer_Influence.value = P('peer');
+        form.Internet_Access.value = P('internet');
+        form.Family_Income.value = P('income');
+        form.Distance_from_Home.value = P('distance');
+
+        // Scroll to form
+        form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.deleteStudent = async (id) => {
+        if (!confirm('TERMINATE NODE: Are you certain?')) return;
+        try {
+            const resp = await fetch(`/api/student/${id}/delete/`, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            });
+            const res = await resp.json();
+            if (res.success) window.location.reload();
+            else alert(res.error);
+        } catch (err) { alert("TERMINATION FAILED"); }
+    }
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const loader = document.getElementById('btnLoader');
+        const text = document.getElementById('btnText');
+        btn.disabled = true; loader.classList.remove('hidden'); text.classList.add('hidden');
+
+        const url = editMode ? `/api/student/${currentEditId}/edit/` : '{% url "api_add_student" %}';
+
+        try {
+            const resp = await fetch(url, {
+                method: 'POST', body: new FormData(form), headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+            });
+            const data = await resp.json();
+            if (data.error) throw new Error(data.error);
+            showResults(data);
+            setTimeout(() => window.location.reload(), 4000);
+        } catch (err) { alert(err.message); } finally { btn.disabled = false; loader.classList.add('hidden'); text.classList.remove('hidden'); }
+    };
+    function showResults(data) {
+        document.getElementById('modalStudentName').textContent = data.student_name;
+        document.getElementById('reportTime').textContent = data.student_id ? 'NODE-' + data.student_id : 'TEMP-NODE';
+        document.getElementById('scoreVal').textContent = data.score + '%';
+        document.getElementById('geminiOneLiner').textContent = data.one_liner;
+        const promVal = document.getElementById('promotionVal');
+        const promCard = document.getElementById('promotionCard');
+        promVal.textContent = data.promotion_status;
+        if (data.promotion_status === 'Promote') {
+            promCard.className = 'p-8 rounded-[2rem] border-2 border-emerald-100 bg-emerald-50 text-emerald-700';
+            promVal.className = 'text-4xl font-black text-emerald-600 uppercase tracking-tighter';
+        } else {
+            promCard.className = 'p-8 rounded-[2rem] border-2 border-rose-100 bg-rose-50 text-rose-700';
+            promVal.className = 'text-4xl font-black text-rose-600 uppercase tracking-tighter';
+        }
+        const remList = document.getElementById('remediesList');
+        remList.innerHTML = '';
+        data.remedy_details.forEach(rem => {
+            const li = document.createElement('li');
+            li.className = 'flex items-center space-x-3 text-[10px] font-black uppercase text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100';
+            li.innerHTML = `<div class="w-1 h-1 bg-neon rounded-full"></div> <span>${rem}</span>`;
+            remList.appendChild(li);
+        });
+        const reassBox = document.getElementById('reassessmentBox');
+        if (data.needs_reassessment) reassBox.classList.remove('hidden');
+        else reassBox.classList.add('hidden');
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() { modal.classList.add('hidden'); }
+</script>
+{% endblock %}
